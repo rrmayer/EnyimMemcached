@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyProduct("Enyim.Caching")]
+[assembly: AssemblyProduct("Modified Enyim.Caching")]
 
-[assembly: AssemblyCompany("enyim.com")]
-[assembly: AssemblyCopyright("Copyright © enyim.com, Attila Kiskó 2007-2010")]
+[assembly: AssemblyCompany("Stewart Strategy, Inc.")]
+[assembly: AssemblyCopyright("Copyright © enyim.com, Attila Kiskó 2007-2010, 2012 Stewart Strategy, Inc.")]
 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
 [assembly: ComVisible(false)]
 
 [assembly: Guid("a8cd3f39-7731-4ee8-a7ce-444d540d4a4d")]
@@ -33,3 +32,4 @@ using System.Runtime.InteropServices;
  *    
  * ************************************************************/
 #endregion
+
