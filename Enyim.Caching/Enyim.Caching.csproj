@@ -23,6 +23,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>1591</NoWarn>
     <DocumentationFile>bin\Release\Enyim.Caching.xml</DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -295,18 +297,15 @@
     <None Include="Demo.config" />
     <None Include="ecb_strongNameKey.snk" />
     <None Include="Enyim.Caching.nuspec" />
-    <None Include="public_key.snk" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
