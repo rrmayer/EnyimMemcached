@@ -1,16 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Enyim.Caching.Memcached.Results.StatusCodes
 {
-	public enum StatusCodeEnums
-	{
-		Success = 0,
-		NotFound,
-		DataExistsForKey
-	}
+    public enum StatusCode
+    {
+        NodeNotFound = -2,
+        UnspecifiedError = -1,
+        NoError = 0,
+        KeyNotFound = 1,
+        KeyExists = 2,
+        ValueTooLarge = 3,
+        InvalidArguments = 4,
+        ItemNotStored = 5,
+        IncrDecrOnNonNumericValue = 6,
+        Unauthorized = 0x20,
+        ContinueAuthentication = 0x21,
+        UnknownCommand = 0x81,
+        OutOfMemory = 0x82
+    }
+
+    public static class Converter
+    {
+        public static StatusCode ToStatusCode(this int input)
+        {
+            if (input >= -2 && input <= 6 || input == 0x20 || input == 0x21 || input == 0x81 || input == 0x82)
+                return (StatusCode)input;
+
+            return StatusCode.UnspecifiedError;
+        }
+    }
 }
 
 #region [ License information          ]

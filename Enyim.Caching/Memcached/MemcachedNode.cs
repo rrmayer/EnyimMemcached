@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using Enyim.Caching.Configuration;
+using Enyim.Caching.Memcached.Results.StatusCodes;
 using Enyim.Collections;
 using System.Security;
 using Enyim.Caching.Memcached.Protocol.Binary;
@@ -565,6 +566,7 @@ namespace Enyim.Caching.Memcached
 				{
 					log.Error(e);
 
+                    result.StatusCode = StatusCode.UnspecifiedError;
 					result.Fail("Exception reading response", e);
 					return result;
 				}
