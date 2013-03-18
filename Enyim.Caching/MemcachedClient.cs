@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Factories;
 using Enyim.Caching.Memcached.Results.Extensions;
+using Enyim.Caching.Memcached.Results.StatusCodes;
 
 namespace Enyim.Caching
 {
@@ -209,7 +210,7 @@ namespace Enyim.Caching
 
 			result.Value = value;
 			result.Cas = cas;
-
+            result.StatusCode = StatusCode.NodeNotFound;
 			if (this.performanceMonitor != null) this.performanceMonitor.Get(1, false);
 
 			result.Fail("Unable to locate node");
@@ -229,7 +230,7 @@ namespace Enyim.Caching
 		public bool Store(StoreMode mode, string key, object value)
 		{
 			ulong tmp = 0;
-			int status;
+			StatusCode status;
 
 			return this.PerformStore(mode, key, value, 0, ref tmp, out status).Success;
 		}
@@ -245,7 +246,7 @@ namespace Enyim.Caching
 		public bool Store(StoreMode mode, string key, object value, TimeSpan validFor)
 		{
 			ulong tmp = 0;
-			int status;
+			StatusCode status;
 
 			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(validFor), ref tmp, out status).Success;
 		}
@@ -261,7 +262,7 @@ namespace Enyim.Caching
 		public bool Store(StoreMode mode, string key, object value, DateTime expiresAt)
 		{
 			ulong tmp = 0;
-			int status;
+			StatusCode status;
 
 			return this.PerformStore(mode, key, value, GetExpiration(expiresAt), ref tmp, out status).Success;
 		}
@@ -277,7 +278,7 @@ namespace Enyim.Caching
 		public CasResult<bool> Cas(StoreMode mode, string key, object value, ulong cas)
 		{
 			var result = this.PerformStore(mode, key, value, 0, cas);
-			return new CasResult<bool> { Cas = result.Cas, Result = result.Success, StatusCode = result.StatusCode.Value };
+            return new CasResult<bool> { Cas = result.Cas, Result = result.Success, StatusCode = result.StatusCode.Value };
 
 		}
 
@@ -328,10 +329,10 @@ namespace Enyim.Caching
 		private IStoreOperationResult PerformStore(StoreMode mode, string key, object value, uint expires, ulong cas)
 		{
 			ulong tmp = cas;
-			int status;
+			StatusCode status;
 
 			var retval = this.PerformStore(mode, key, value, expires, ref tmp, out status);
-			retval.StatusCode = status;
+            retval.StatusCode = status;
 
 			if (retval.Success)
 			{
@@ -340,13 +341,13 @@ namespace Enyim.Caching
 			return retval;
 		}
 
-		protected virtual IStoreOperationResult PerformStore(StoreMode mode, string key, object value, uint expires, ref ulong cas, out int statusCode)
+		protected virtual IStoreOperationResult PerformStore(StoreMode mode, string key, object value, uint expires, ref ulong cas, out StatusCode statusCode)
 		{
 			var hashedKey = this.keyTransformer.Transform(key);
 			var node = this.pool.Locate(hashedKey);
 			var result = StoreOperationResultFactory.Create();
 
-			statusCode = -1;
+		    statusCode = StatusCode.UnspecifiedError;
 
 			if (node != null)
 			{
@@ -367,7 +368,7 @@ namespace Enyim.Caching
 				var commandResult = node.Execute(command);
 
 				result.Cas = cas = command.CasValue;
-				result.StatusCode = statusCode = command.StatusCode;
+			    result.StatusCode = statusCode = command.StatusCode;
 
 				if (commandResult.Success)
 				{
@@ -381,7 +382,7 @@ namespace Enyim.Caching
 			}
 
 			if (this.performanceMonitor != null) this.performanceMonitor.Store(mode, 1, false);
-
+		    result.StatusCode = StatusCode.NodeNotFound;
 			result.Fail("Unable to locate node");
 			return result;
 		}
@@ -619,7 +620,8 @@ namespace Enyim.Caching
 			if (this.performanceMonitor != null) this.performanceMonitor.Mutate(mode, 1, false);
 
 			// TODO not sure about the return value when the command fails
-			result.Fail("Unable to locate node");
+		    result.StatusCode = StatusCode.NodeNotFound;
+            result.Fail("Unable to locate node");
 			return result;
 		}
 
@@ -709,7 +711,7 @@ namespace Enyim.Caching
 			}
 
 			if (this.performanceMonitor != null) this.performanceMonitor.Concatenate(mode, 1, false);
-
+		    result.StatusCode = StatusCode.NodeNotFound;
 			result.Fail("Unable to locate node");
 			return result;
 		}

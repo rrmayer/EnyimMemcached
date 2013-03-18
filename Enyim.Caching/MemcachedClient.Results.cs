@@ -6,6 +6,7 @@ using Enyim.Caching.Memcached;
 using Enyim.Caching.Memcached.Results;
 using Enyim.Caching.Memcached.Results.Extensions;
 using Enyim.Caching.Memcached.Results.Factories;
+using Enyim.Caching.Memcached.Results.StatusCodes;
 
 namespace Enyim.Caching
 {
@@ -24,7 +25,7 @@ namespace Enyim.Caching
 		public IStoreOperationResult ExecuteStore(StoreMode mode, string key, object value)
 		{
 			ulong tmp = 0;
-			int status;
+			StatusCode status;
 
 			return this.PerformStore(mode, key, value, 0, ref tmp, out status);
 		}
@@ -40,7 +41,7 @@ namespace Enyim.Caching
 		public IStoreOperationResult ExecuteStore(StoreMode mode, string key, object value, TimeSpan validFor)
 		{
 			ulong tmp = 0;
-			int status;
+			StatusCode status;
 
 			return this.PerformStore(mode, key, value, MemcachedClient.GetExpiration(validFor), ref tmp, out status);
 		}
@@ -56,7 +57,7 @@ namespace Enyim.Caching
 		public IStoreOperationResult ExecuteStore(StoreMode mode, string key, object value, DateTime expiresAt)
 		{
 			ulong tmp = 0;
-			int status;
+			StatusCode status;
 
 			return this.PerformStore(mode, key, value, GetExpiration(expiresAt), ref tmp, out status);
 		}			
@@ -474,6 +475,7 @@ namespace Enyim.Caching
 				return result;
 			}
 
+		    result.StatusCode = StatusCode.NodeNotFound;
 			result.Fail("Unable to locate node");
 			return result;
 		}
