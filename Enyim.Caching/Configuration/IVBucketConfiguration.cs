@@ -10,30 +10,30 @@ using System.Web;
 
 namespace Enyim.Caching.Configuration
 {
-    public interface IVBucketConfiguration
-    {
-        HashAlgorithm CreateHashAlgorithm();
-        IList<IPEndPoint> Servers { get; }
-        IList<VBucket> Buckets { get; }
-    }
+	public interface IVBucketConfiguration
+	{
+		HashAlgorithm CreateHashAlgorithm();
+		IList<IPEndPoint> Servers { get; }
+		IList<VBucket> Buckets { get; }
+	}
 
-    public struct VBucket
-    {
-        private int master;
-        private int[] replicas;
-        private int index;
+	public struct VBucket
+	{
+		private int master;
+		private int[] replicas;
+		private int index;
 
-        public VBucket(int master, int[] replicas, int index)
-        {
-            this.master = master;
-            this.replicas = replicas;
-            this.index = index;
-        }
+		public VBucket(int master, int[] replicas, int index)
+		{
+			this.master = master;
+			this.replicas = replicas;
+			this.index = index;
+		}
 
-        public int Index { get { return this.index; } }
-        public int Master { get { return this.master; } }
-        public int[] Replicas { get { return this.replicas; } }
-    }
+		public int Master { get { return this.master; } }
+		public int[] Replicas { get { return this.replicas; } }
+		public int Index { get { return this.index; } }
+	}
 }
 
 #region [ License information          ]

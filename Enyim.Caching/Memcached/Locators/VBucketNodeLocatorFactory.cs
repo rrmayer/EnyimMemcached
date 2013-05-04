@@ -13,38 +13,38 @@ using System.IO;
 
 namespace Enyim.Caching.Memcached
 {
-    /// <summary>
-    /// Factory for the vbucket based locator.
-    /// </summary>
-    /// <remarks>You need to use this in the configuration file because this is the only way pass parameters to the VBucketNodeLocator.
-    /// 
-    ///		<locator factory="Enyim.Caching.Memcached.VBucketNodeLocatorFactory" configFile="vbucket.json" />
-    /// 
-    /// </remarks>
-    public class VBucketNodeLocatorFactory : IProviderFactory<IMemcachedNodeLocator>
-    {
-        private string hashAlgo;
-        private VBucket[] buckets;
+	/// <summary>
+	/// Factory for the vbucket based locator.
+	/// </summary>
+	/// <remarks>You need to use this in the configuration file because this is the only way pass parameters to the VBucketNodeLocator.
+	/// 
+	///		<locator factory="Enyim.Caching.Memcached.VBucketNodeLocatorFactory" configFile="vbucket.json" />
+	/// 
+	/// </remarks>
+	public class VBucketNodeLocatorFactory : IProviderFactory<IMemcachedNodeLocator>
+	{
+		private string hashAlgo;
+		private VBucket[] buckets;
 
-        void IProvider.Initialize(Dictionary<string, string> parameters)
-        {
-            ConfigurationHelper.TryGetAndRemove(parameters, "hashAlgorithm", out this.hashAlgo, true);
+		void IProvider.Initialize(Dictionary<string, string> parameters)
+		{
+			ConfigurationHelper.TryGetAndRemove(parameters, "hashAlgorithm", out this.hashAlgo, true);
 
-            string json;
-            ConfigurationHelper.TryGetAndRemove(parameters, String.Empty, out json, true);
-            ConfigurationHelper.CheckForUnknownAttributes(parameters);
+			string json;
+			ConfigurationHelper.TryGetAndRemove(parameters, String.Empty, out json, true);
+			ConfigurationHelper.CheckForUnknownAttributes(parameters);
 
-            var tmp = new JavaScriptSerializer().Deserialize<int[][]>(json);
+			var tmp = new JavaScriptSerializer().Deserialize<int[][]>(json);
 
-            var i = 0;
-            this.buckets = tmp.Select(entry => new VBucket(entry[0], entry.Skip(1).ToArray(), i++)).ToArray();
-        }
+			var i = 0;
+			this.buckets = tmp.Select(entry => new VBucket(entry[0], entry.Skip(1).ToArray(), ++i)).ToArray();
+		}
 
-        IMemcachedNodeLocator IProviderFactory<IMemcachedNodeLocator>.Create()
-        {
-            return new VBucketNodeLocator(this.hashAlgo, this.buckets);
-        }
-    }
+		IMemcachedNodeLocator IProviderFactory<IMemcachedNodeLocator>.Create()
+		{
+			return new VBucketNodeLocator(this.hashAlgo, this.buckets);
+		}
+	}
 }
 
 #region [ License information          ]
