@@ -13,6 +13,9 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <Import Project="..\build\CommonProperties.targets" />
   <ItemGroup>
     <Reference Include="log4net">
